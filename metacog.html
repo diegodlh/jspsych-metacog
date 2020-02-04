@@ -53,7 +53,7 @@
           }, 0)
       }
 
-      var basename = uid.toString().padStart(3, '0') + jsPsych.startTime().toISOString()
+      var basename = uid.toString().padStart(3, '0') + '_' + jsPsych.startTime().toISOString()
 
       saveLocal('metacog-data_' + basename, jsPsych.data.get().csv())
       //saveLocal('metacog-intdata_' + basename, jsPsych.data.getInteractionData().csv())
