@@ -56,7 +56,7 @@
       var basename = uid.toString().padStart(3, '0') + jsPsych.startTime().toISOString()
 
       saveLocal('metacog-data_' + basename, jsPsych.data.get().csv())
-      saveLocal('metacog-intdata_' + basename, jsPsych.data.getInteractionData().csv())
+      //saveLocal('metacog-intdata_' + basename, jsPsych.data.getInteractionData().csv())
 
     };
 
