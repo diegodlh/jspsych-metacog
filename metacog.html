@@ -29,7 +29,7 @@
     var consecutive_losses=0;
     var step_index=-1;
     var step=[];
-    var max_levels=100;  // maximum number of trials
+    var max_levels=50;  // maximum number of trials
     var pass_count=0;
     var t0;
     var timeout=5*60*1000;
@@ -79,11 +79,6 @@
       }
     };
 
-
-
-
-
-
     var intro = {
       type: 'instructions-no_pagenum',
       pages: [
@@ -116,28 +111,19 @@
           trial_index++;
         },
         level: function(){
-          if (trial_index>0){
+          if (trial_index>0){  // this is run before on_start
             var results = jsPsych.data.get().select("won").values;
             var last_trial_won=results[results.length-1];
-            if ((last_trial_won && consecutive_wins ==1) || (!last_trial_won && consecutive_losses==1) ){ // reversal
+            if ((last_trial_won && consecutive_wins ==1) || (!last_trial_won && consecutive_losses==1) ){ // reverse tendency
               step_index++;
               step=stepSizes[Math.min(step_index,stepSizes.length-1)];
             };
-            if(trial_index==1){
-              if(last_trial_won){
-                level=Math.max(0,level-step);
-              }else{
-                level=Math.max(0,level+step);
-              }
-            } else {
-              if(last_trial_won && ( (consecutive_wins % nDown==0 ) ) ){
-                  level=Math.max(0,level-step);
-              }else if (!last_trial_won && ( (consecutive_losses%nUp==0) ) ) {
-                level=Math.min(1,level+step);
-              }
-            }
-          }
-          console.log(level)
+            if (last_trial_won && (consecutive_wins >= nDown)){
+              level=Math.max(0,level-step);
+            } else if (!last_trial_won && (consecutive_losses>=nUp)){
+              level=Math.min(1,level+step);
+            };
+          };
           return level;
         },
         on_finish: function(){
@@ -245,7 +231,8 @@
     window.addEventListener('keydown', endExperiment)
 
     jsPsych.init({
-      timeline: [standby, intro, big_if_node, winner],
+      timeline: [standby,intro, big_if_node, winner],
+      //timeline: [standby, intro, big_if_node, winner],
       // on_finish: function() {
       //   jsPsych.data.displayData();
       // },
